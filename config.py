@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
+
 class Config:
-    TOKEN = "NzIzOTgxNTgwMTcwOTUyNzY0.Xu-JCw.dZ-lMT6Uom6yY_jT7h0_4lOiDyk"
+    TOKEN = os.environ.get("mathbot-token")
     GUILD = "Fermicide's server"
