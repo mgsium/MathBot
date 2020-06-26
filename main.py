@@ -1,6 +1,7 @@
 # Third-Party Libs
 import discord
 from bs4 import BeautifulSoup
+import wolframalpha
 
 # Standard Libs
 import random
@@ -16,17 +17,21 @@ client = discord.Client()
 # Meme Info
 new_meme_msg = ["Sending a meme!", "You asked for it...", "Meme coming up!", "Meme on the way!", "Of course!"]
 filenames = os.listdir("math_memes")
-n = 9
+n = 26
 
 # Plus Automation Article Scraping
-URL = "https://plus.maths.org/content/Article"
-response = requests.get(URL)
+urls = ["https://plus.maths.org/content/Article"]
+[urls.append(f"https://plus.maths.org/content/Article?page={n}") for n in range(1, 10)]
+articleLinks = []
+for URL in urls:
+    response = requests.get(URL)
 
-soup = BeautifulSoup(response.text, "html.parser")
-articles = soup.findAll("div", {"class": "col-xs-12"})
-articleData = []
+    soup = BeautifulSoup(response.text, "html.parser")
+    articles = soup.findAll("div", {"class": "col-xs-12"})
+    [articleLinks.append(f"https://plus.maths.org{article.find('a')['href']}") for article in articles]
 
-articleLinks = [f"https://plus.maths.org{article.find('a')['href']}" for article in articles]
+# Wolfram Alpha
+cl = wolframalpha.Client("8PAT4Y-X56329GVYQ")
 
 # When Connecting to Discord...
 @client.event
@@ -55,8 +60,24 @@ async def on_message(message):
         articleLink = random.choice(articleLinks)
         await message.channel.send(articleLink)
         articleLinks.remove(articleLink)
-
-
+    elif "answer this" in message.content.lower():
+        query = message.content.lower().split("answer this")
+        query = query[len(query) - 1]
+        print(query)
+        res = cl.query(query)
+        out = ""
+        await message.channel.send("I found this...")
+        n = 0
+        try:
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    if n == 1 and sub.plaintext is not None:
+                        out += f"{sub.plaintext}\n"
+                        break
+                    n += 1
+            await message.channel.send(out)
+        except Exception as e:
+            pass
 
 # Run Client
 client.run(Config.TOKEN)
