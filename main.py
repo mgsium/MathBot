@@ -7,6 +7,7 @@ import wolframalpha
 import random
 import os
 import requests
+import re
 
 # Local Imports
 from config import Config
@@ -32,6 +33,19 @@ for URL in urls:
 
 # Wolfram Alpha
 cl = wolframalpha.Client("8PAT4Y-X56329GVYQ")
+
+# Code Parodies
+parody_links = {
+    "Game of Codes": "https://www.youtube.com/watch?v=3vI_7os2V_o",
+    "The Java Life Rap": "https://www.youtube.com/watch?v=b-Cr0EWwaTk",
+    "You Give REST a Bad Name": "https://www.youtube.com/watch?v=nSKp2StlS6s",
+    "Writing Bad": "https://www.youtube.com/watch?v=DGa6MAibjzA",
+    "Write in Go": "https://www.youtube.com/watch?v=LJvEIjRBSDA",
+    "Database Skills": "https://www.youtube.com/watch?v=0vPt7GI-2kc",
+    "SUSE.Yes Please.": "https://www.youtube.com/watch?v=M9bq_alk-sw",
+    "House Codes": "https://www.youtube.com/watch?v=WUAzr-3DVP8"
+}
+parody_selection_pattern = "show me parody ([1-8])"
 
 # When Connecting to Discord...
 @client.event
@@ -60,8 +74,9 @@ async def on_message(message):
         articleLink = random.choice(articleLinks)
         await message.channel.send(articleLink)
         articleLinks.remove(articleLink)
-    elif "answer this" in message.content.lower():
-        query = message.content.lower().split("answer this")
+    elif "answer this" in message.content.lower() or "hey mathbot" in message.content.lower():
+        await message.channel.send("Searching for you...")
+        query = message.content.lower().split("answer this" if "answer this" in message.content.lower() else "hey mathbot")
         query = query[len(query) - 1]
         print(query)
         res = cl.query(query)
@@ -78,6 +93,22 @@ async def on_message(message):
             await message.channel.send(out)
         except Exception as e:
             pass
+    elif "show me code parodies" in message.content.lower():
+        options = ""
+        for i, k in enumerate(parody_links):
+           options += f"[{i + 1}] {k}\n"
+        await message.channel.send(f"The options:\n{options}")
+    elif re.match(parody_selection_pattern, message.content.lower()):
+        match = re.compile(parody_selection_pattern).search(message.content.lower()).group(1)
+        index = int(match) - 1
+        matched = False
+        for i, k in enumerate(parody_links):
+           if i ==  index:
+               await message.channel.send(parody_links[k])
+               matched  = True
+        if not matched:
+            await message.channel.send("Sorry, I could find that.")
+
 
 # Run Client
 client.run(Config.TOKEN)
