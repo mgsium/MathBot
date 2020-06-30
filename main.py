@@ -2,6 +2,8 @@
 import discord
 from bs4 import BeautifulSoup
 import wolframalpha
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Standard Libs
 import random
@@ -18,7 +20,7 @@ client = discord.Client()
 # Meme Info
 new_meme_msg = ["Sending a meme!", "You asked for it...", "Meme coming up!", "Meme on the way!", "Of course!"]
 filenames = os.listdir("math_memes")
-n = 26
+n = 46
 
 # Plus Automation Article Scraping
 urls = ["https://plus.maths.org/content/Article"]
@@ -43,9 +45,13 @@ parody_links = {
     "Write in Go": "https://www.youtube.com/watch?v=LJvEIjRBSDA",
     "Database Skills": "https://www.youtube.com/watch?v=0vPt7GI-2kc",
     "SUSE.Yes Please.": "https://www.youtube.com/watch?v=M9bq_alk-sw",
-    "House Codes": "https://www.youtube.com/watch?v=WUAzr-3DVP8"
+    "House of Codes": "https://www.youtube.com/watch?v=WUAzr-3DVP8",
+    "Uptown Funk": "https://www.youtube.com/watch?v=SYRlTISvjww",
+    "Lady Java": "https://www.youtube.com/watch?v=Mk3qkQROb_k",
+    "We're Gonna Build a Framework": "https://www.youtube.com/watch?v=Wm2h0cbvsw8",
+    "The SysAdmin Song": "https://www.youtube.com/watch?v=udhd9fmOdCs"
 }
-parody_selection_pattern = "show me parody ([1-8])"
+parody_selection_pattern = f"show me parody ([1-{len(parody_links.keys())}])"
 
 # When Connecting to Discord...
 @client.event
@@ -108,6 +114,21 @@ async def on_message(message):
                matched  = True
         if not matched:
             await message.channel.send("Sorry, I could find that.")
+    elif "plot" in message.content.lower():
+        plt.clf()
+        msg = message.content.lower().split("plot")[-1].strip()
+        equation = msg
+        x = np.array(range(-100, 100))
+        y = eval(equation)
+        plt.plot(x, y)
+        n = len(os.listdir('./graphs'))
+        plt.savefig(f"./graphs/{n}.png")
+        await message.channel.send(file=discord.File(f"./graphs/{n}.png"))
+        n+=1
+        try:
+            os.remove(f"./graphs/{n-2}.png")
+        except:
+            pass
 
 
 # Run Client
