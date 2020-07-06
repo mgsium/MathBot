@@ -20,7 +20,7 @@ client = discord.Client()
 # Meme Info
 new_meme_msg = ["Sending a meme!", "You asked for it...", "Meme coming up!", "Meme on the way!", "Of course!"]
 filenames = os.listdir("math_memes")
-n = 46
+n = 66
 
 # Plus Automation Article Scraping
 urls = ["https://plus.maths.org/content/Article"]
@@ -49,9 +49,13 @@ parody_links = {
     "Uptown Funk": "https://www.youtube.com/watch?v=SYRlTISvjww",
     "Lady Java": "https://www.youtube.com/watch?v=Mk3qkQROb_k",
     "We're Gonna Build a Framework": "https://www.youtube.com/watch?v=Wm2h0cbvsw8",
-    "The SysAdmin Song": "https://www.youtube.com/watch?v=udhd9fmOdCs"
+    "The SysAdmin Song": "https://www.youtube.com/watch?v=udhd9fmOdCs",
+    "The Javapocalypse": "https://www.youtube.com/watch?v=E3418SeWZfQ"
 }
 parody_selection_pattern = f"show me parody ([1-{len(parody_links.keys())}])"
+
+# Name config
+# name_change_pattern = f"call me ([\w+])"
 
 # When Connecting to Discord...
 @client.event
@@ -129,6 +133,8 @@ async def on_message(message):
             os.remove(f"./graphs/{n-2}.png")
         except:
             pass
+    elif "call me" in message.content.lower():
+
 
 
 # Run Client
