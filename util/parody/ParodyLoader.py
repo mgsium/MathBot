@@ -1,6 +1,5 @@
 import csv
 import os
-from collections.abc import Iterable
 
 class ParodyLoader:
     """A class to handle parody links."""

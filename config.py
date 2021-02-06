@@ -7,3 +7,4 @@ class Config:
     """Contains program config constants."""
     TOKEN = os.environ.get("mathbot-token")
     GUILD = "Fermicide's server"
+    WOLFRAM_ALPHA_CLIENT_KEY = os.environ.get("wolfram-alpha-client-key")

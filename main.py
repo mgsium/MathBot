@@ -38,7 +38,7 @@ for URL in urls:
     [articleLinks.append(f"https://plus.maths.org{article.find('a')['href']}") for article in articles]
 
 # Wolfram Alpha
-cl = wolframalpha.Client("8PAT4Y-X56329GVYQ")
+cl = wolframalpha.Client(Config.WOLFRAM_ALPHA_CLIENT_KEY)
 
 # Name config
 # name_change_pattern = f"call me ([\w+])"
@@ -121,8 +121,6 @@ async def on_message(message):
             pass
     elif "call me" in message.content.lower():
         pass
-
-
 
 # Run Client
 client.run(Config.TOKEN)
