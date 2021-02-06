@@ -24,7 +24,7 @@ parodyLoader = ParodyLoader()
 # Meme Info
 new_meme_msg = ["Sending a meme!", "You asked for it...", "Meme coming up!", "Meme on the way!", "Of course!"]
 filenames = os.listdir("math_memes")
-n = 66
+n = 76
 
 # Plus Automation Article Scraping
 urls = ["https://plus.maths.org/content/Article"]
